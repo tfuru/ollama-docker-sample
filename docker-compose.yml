@@ -1,0 +1,46 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./app:/app
+    ports:
+      - "8888:8000"
+    tty: true
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+    # environment:
+    #  - OLLAMA_ORIGINS=*
+    #  - OLLAMA_HOST=0.0.0.0:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"    
+    # GPUを使用する場合、以下の行のコメントを外してください
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - capabilities: [gpu]
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    ports:
+      - "3000:8080"
+    volumes:
+      - open-webui:/app/backend/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: always
+
+volumes:
+  ollama:
+  open-webui:
