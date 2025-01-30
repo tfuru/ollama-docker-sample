@@ -29,6 +29,8 @@ docker compose logs open-webui
 
 1. Open WebUI を起動する  
 http://localhost:3000/  
+http://192.168.86.135:3000/  
+
 ```bash
 ID: admin@example.com
 パスワード dU3inxfX
