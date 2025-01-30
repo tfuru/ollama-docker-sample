@@ -58,6 +58,32 @@ curl http://localhost:11434/api/chat -d '{
 
 ```
 
+```bash
+BASE64=$(base64 -i ./example/0.jpg)
+
+echo '{
+  "model": "llava",
+  "stream": false,
+  "response_format": {"type": "json_object"},
+  "messages": [
+    {
+      "role": "user",
+      "content": "Is it in this picture?",
+      "images": ["'$BASE64'"]
+    },
+    {
+      "role": "system",
+      "content": "Your answer must use the following json schema and should not contain any additional characters.: {\"message\": \"Write a description of the content\",\"items\": [\"element\"]}"
+    }
+  ]
+}' > ./example/llava.json
+
+# cat ./example/llava.json | jq .
+# curl http://localhost:11434/api/chat -d @./example/llava.json | jq '.message.content' | sed -e 's/^"//' -e 's/\"$//' > ./example/out.json
+
+curl http://localhost:11434/api/chat -d @./example/llava.json | jq '.message.content' > ./example/out.json
+```
+
 ## 参考
 
 ローカルLLMの使用 - OllamaとOpen WebUIの連携について解説  
