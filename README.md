@@ -9,7 +9,7 @@ docker compose up -d
 docker compose exec ollama bash
 # docker compose exec open-webui bash
 
-# モデルを作成する
+# モデルをプルする
 ollama run llama3
 # ollama run gemma
 # ollama run llava
@@ -32,13 +32,6 @@ http://localhost:3000/
 ```bash
 ID: admin@example.com
 パスワード dU3inxfX
-```
-
-2. モデルを設定する
-
-```bash
-docker compose exec open-webui bash
-
 ```
 
 # モデルの動作確認
