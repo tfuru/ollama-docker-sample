@@ -51,32 +51,68 @@ curl http://localhost:11434/api/chat -d '{
   "stream": false
 }'
 
+curl http://192.168.86.135:11434/api/chat -d '{
+  "model": "llama3",
+  "messages": [
+    {
+      "role": "user",
+      "content": "why is the sky blue?"
+    }
+  ],
+  "stream": false
+}'
+
+# 192.168.86.149
+curl http://192.168.86.149:11434/api/chat -d '{
+  "model": "llama3",
+  "messages": [
+    {
+      "role": "user",
+      "content": "why is the sky blue?"
+    }
+  ],
+  "stream": false
+}'
 ```
 
 ```bash
+MODEL=llava
 BASE64=$(base64 -i ./example/0.jpg)
+BASE64=$(base64 -i ./example/1.jpg)
+BASE64=$(base64 -i ./example/2.jpg)
 
 echo '{
-  "model": "llava",
+  "model": "'$MODEL'",
   "stream": false,
   "response_format": {"type": "json_object"},
   "messages": [
     {
       "role": "user",
-      "content": "Is it in this picture?",
+      "content": "What is in this photo?",
       "images": ["'$BASE64'"]
     },
     {
       "role": "system",
-      "content": "Your answer must use the following json schema and should not contain any additional characters.: {\"message\": \"Write a description of the content\",\"items\": [\"element\"]}"
-    }
+      "content": "Please output the recognized information in accordance with the following JSON schema. {items: [{label: string, score: number}]}"
+    },
+    {
+      "role": "system",
+      "content": "Make label a short string."
+    },
+    {
+      "role": "system",
+      "content": "Please write the content in Japanese"
+    }    
   ]
 }' > ./example/llava.json
 
 # cat ./example/llava.json | jq .
 # curl http://localhost:11434/api/chat -d @./example/llava.json | jq '.message.content' | sed -e 's/^"//' -e 's/\"$//' > ./example/out.json
 
-curl http://localhost:11434/api/chat -d @./example/llava.json | jq '.message.content' > ./example/out.json
+curl http://localhost:11434/api/chat -d @./example/llava.json | jq -r '.message.content' > ./example/out.json
+curl http://192.168.86.135:11434/api/chat -d @./example/llava.json | jq -r '.message.content' > ./example/out.json
+
+curl http://192.168.86.149:11434/api/chat -d @./example/llava.json | jq -r '.message.content' | pandoc --to plain | jq -r > ./example/out.json
 ```
 
 ## 参考

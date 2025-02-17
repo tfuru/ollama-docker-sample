@@ -1,1 +1,20 @@
- {\"message\": \"In the image, there is an artistic representation of a dog statue in the form of an Egyptian guardian, possibly resembling an Anubis figure. This statue is standing upright on a stone base and has a stern facial expression. The dog appears to be a large breed with a curled tail and erect ears, typical characteristics of the Anubis. It has a dark color scheme and is located outdoors within a garden setting, surrounded by greenery. There are no texts or other objects in the immediate vicinity of the statue.\"} 
+{
+  "items": [
+    {
+      "label": "dog statue",
+      "score": 1
+    },
+    {
+      "label": "statue on pedestal",
+      "score": 0.9
+    },
+    {
+      "label": "pedestal with statue",
+      "score": 0.85
+    },
+    {
+      "label": "outdoor setting",
+      "score": 1
+    }
+  ]
+}
