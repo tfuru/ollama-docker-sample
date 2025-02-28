@@ -10,9 +10,9 @@ docker compose exec ollama bash
 # docker compose exec open-webui bash
 
 # モデルをプルする
-ollama run llama3
+ollama run llava
+# ollama run llama3
 # ollama run gemma
-# ollama run llava
 
 # ホスト名確認
 cat /etc/hosts
@@ -28,8 +28,12 @@ docker compose logs open-webui
 # 使い方
 
 1. Open WebUI を起動する  
-http://localhost:3000/  
-http://192.168.86.135:3000/  
+
+```bash
+open http://llm-server.local:3000/
+# http://localhost:3000/  
+# http://192.168.86.135:3000/  
+```
 
 ```bash
 ID: admin@example.com
@@ -40,7 +44,7 @@ ID: admin@example.com
 ```bash
 docker compose logs ollama
 
-curl http://localhost:11434/api/chat -d '{
+curl http://llm-server.local:11434/api/chat -d '{
   "model": "llama3",
   "messages": [
     {
@@ -51,8 +55,8 @@ curl http://localhost:11434/api/chat -d '{
   "stream": false
 }'
 
-curl http://192.168.86.135:11434/api/chat -d '{
-  "model": "llama3",
+curl http://llm-server.local:11434/api/chat -d '{
+  "model": "llava",
   "messages": [
     {
       "role": "user",
@@ -62,17 +66,6 @@ curl http://192.168.86.135:11434/api/chat -d '{
   "stream": false
 }'
 
-# 192.168.86.149
-curl http://192.168.86.149:11434/api/chat -d '{
-  "model": "llama3",
-  "messages": [
-    {
-      "role": "user",
-      "content": "why is the sky blue?"
-    }
-  ],
-  "stream": false
-}'
 ```
 
 ```bash
@@ -104,15 +97,10 @@ echo '{
       "content": "Please write the content in Japanese"
     }    
   ]
-}' > ./example/llava.json
+}' | jq -c > ./example/template.json
 
-# cat ./example/llava.json | jq .
-# curl http://localhost:11434/api/chat -d @./example/llava.json | jq '.message.content' | sed -e 's/^"//' -e 's/\"$//' > ./example/out.json
+curl http://llm-server.local:11434/api/chat -d @./example/template.json | jq -r '.message.content' > ./example/out.json
 
-curl http://localhost:11434/api/chat -d @./example/llava.json | jq -r '.message.content' > ./example/out.json
-curl http://192.168.86.135:11434/api/chat -d @./example/llava.json | jq -r '.message.content' > ./example/out.json
-
-curl http://192.168.86.149:11434/api/chat -d @./example/llava.json | jq -r '.message.content' | pandoc --to plain | jq -r > ./example/out.json
 ```
 
 ## 参考

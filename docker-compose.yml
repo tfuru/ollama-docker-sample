@@ -1,7 +1,7 @@
 services:
   app:
     build:
-      context: .
+      context: ./app
       dockerfile: Dockerfile
     env_file:
       - .env
@@ -9,6 +9,13 @@ services:
       - ./app:/app
     ports:
       - "8888:8000"
+    tty: true
+  mdns-avahi:
+    build:
+      context: ./mdns-avahi
+      dockerfile: Dockerfile
+    hostname: llm-server
+    network_mode: host
     tty: true
   ollama:
     image: ollama/ollama
