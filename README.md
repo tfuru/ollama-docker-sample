@@ -101,6 +101,8 @@ echo '{
 
 curl http://llm-server.local:11434/api/chat -d @./example/template.json | jq -r '.message.content' > ./example/out.json
 
+curl http://192.168.137.1:11434/api/chat -d @./example/template.json | jq -r '.message.content' > ./example/out.json
+
 ```
 
 ## 参考

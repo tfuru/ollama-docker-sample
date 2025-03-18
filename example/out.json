@@ -1,20 +1,12 @@
+ ```json
 {
-  "items": [
-    {
-      "label": "dog statue",
-      "score": 1
-    },
-    {
-      "label": "statue on pedestal",
-      "score": 0.9
-    },
-    {
-      "label": "pedestal with statue",
-      "score": 0.85
-    },
-    {
-      "label": "outdoor setting",
-      "score": 1
-    }
-  ]
+    "items": [
+        {"label": "障害", "score": 9},
+        {"label": "猫", "score": 8},
+        {"label": "外部", "score": 7},
+        {"label": "地層", "score": 5}
+    ]
 }
+```
+
+この画像では、障害がある猫が、外部にいて、地層でスタンドしています。 
