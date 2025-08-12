@@ -8,7 +8,7 @@ podman compose up -d
 
 # ollama コンテナに入る
 podman compose exec ollama bash
-# podman compose exec open-webui bash
+# podman compose exec app bash
 
 # GPU 確認
 vulkaninfo | grep GPU
@@ -48,67 +48,35 @@ ID: admin@example.com
 
 # モデルの動作確認
 ```bash
-docker compose logs ollama
-
-curl http://localhost:11434/api/chat -d '{
-  "model": "llama3",
+curl "http://localhost:11434/api/chat" -d '{
+  "model": "gemma3:4b",
   "messages": [
     {
       "role": "user",
-      "content": "why is the sky blue?"
+      "content": "こんにちは"
     }
   ],
   "stream": false
-}'
+}' | jq -r .message.content > example/text.txt
 
-curl http://llm-server.local:11434/api/chat -d '{
-  "model": "llava",
-  "messages": [
-    {
-      "role": "user",
-      "content": "why is the sky blue?"
-    }
-  ],
-  "stream": false
-}'
+# 音声作成
+curl -v -s \
+    -X POST \
+    "http://localhost:50021/audio_query?speaker=1" \
+    --get --data-urlencode text@example/text.txt > example/query.json
 
-```
+curl -v -s \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d @example/query.json \
+    "localhost:50021/synthesis?speaker=1" \
+    > example/audio.wav
 
-```bash
-MODEL=llava
-BASE64=$(base64 -i ./example/0.jpg)
-BASE64=$(base64 -i ./example/1.jpg)
-BASE64=$(base64 -i ./example/2.jpg)
-
-echo '{
-  "model": "'$MODEL'",
-  "stream": false,
-  "response_format": {"type": "json_object"},
-  "messages": [
-    {
-      "role": "user",
-      "content": "What is in this photo?",
-      "images": ["'$BASE64'"]
-    },
-    {
-      "role": "system",
-      "content": "Please output the recognized information in accordance with the following JSON schema. {items: [{label: string, score: number}]}"
-    },
-    {
-      "role": "system",
-      "content": "Make label a short string."
-    },
-    {
-      "role": "system",
-      "content": "Please write the content in Japanese"
-    }    
-  ]
-}' | jq -c > ./example/template.json
-
-curl http://llm-server.local:11434/api/chat -d @./example/template.json | jq -r '.message.content' > ./example/out.json
-
-curl http://192.168.137.1:11434/api/chat -d @./example/template.json | jq -r '.message.content' > ./example/out.json
-
+curl -v -s \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d @example/chat.json \
+  http://localhost:8888/api/chat
 ```
 
 ## 参考

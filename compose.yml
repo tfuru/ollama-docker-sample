@@ -1,0 +1,48 @@
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8888:8888"
+    tty: true
+  # ollama:
+  #   hostname: ollama
+  #   build:
+  #     context: ./ollama
+  #     dockerfile: Dockerfile
+  #   image: ollama/ollama:latest
+  #   volumes:
+  #     - ollama:/root/.ollama
+  #   ports:
+  #     - "11434:11434"
+  #   restart: unless-stopped
+  #   devices:
+  #     - "/dev/dri:/dev/dri"
+  #   # GPUを使用する場合、以下の行のコメントを外してください
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - capabilities: [gpu]
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    ports:
+      - "3000:8080"
+    volumes:
+      - open-webui:/app/backend/data
+    restart: always
+  voicevox:
+    build:
+      context: ./voicevox
+      dockerfile: Dockerfile
+    ports:
+      - "50021:50021"
+    restart: always
+volumes:
+  open-webui:
+  voicevox:
