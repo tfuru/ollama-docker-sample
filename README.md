@@ -1,18 +1,26 @@
-# ローカルLLM 利用 するための docker compose
+# ローカルLLM 利用 するための podman compose
 Ollama と Open WebUI  
 
 # 初期化
 ```bash
-docker compose up -d
+
+podman compose up -d
 
 # ollama コンテナに入る
-docker compose exec ollama bash
-# docker compose exec open-webui bash
+podman compose exec ollama bash
+# podman compose exec open-webui bash
+
+# GPU 確認
+vulkaninfo | grep GPU
+
+# モデル一覧
+ollama list
 
 # モデルをプルする
 ollama run llava
 # ollama run llama3
-# ollama run gemma
+# ollama run gemma3:4b
+# ollama run gpt-oss:20b
 
 # ホスト名確認
 cat /etc/hosts
@@ -20,18 +28,16 @@ cat /etc/hosts
 
 # ログ確認
 ```bash
-docker compose logs ollama
-docker compose logs open-webui
+podman compose logs ollama
+podman compose logs open-webui
 ```
-
 
 # 使い方
 
 1. Open WebUI を起動する  
 
 ```bash
-open http://llm-server.local:3000/
-# http://localhost:3000/  
+http://localhost:3000/  
 # http://192.168.86.135:3000/  
 ```
 
@@ -44,7 +50,7 @@ ID: admin@example.com
 ```bash
 docker compose logs ollama
 
-curl http://llm-server.local:11434/api/chat -d '{
+curl http://localhost:11434/api/chat -d '{
   "model": "llama3",
   "messages": [
     {
