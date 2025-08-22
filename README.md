@@ -76,7 +76,23 @@ curl -v -s \
   -X POST \
   -H "Content-Type: application/json" \
   -d @example/chat.json \
-  http://localhost:8888/api/chat
+  http://localhost:8888/api/chat \
+  | jq -r .audio
+
+# ダウンロードして音声再生する サンプル
+curl -s $(curl -v -s \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d @example/chat.json \
+  http://localhost:8888/api/chat \
+  | jq -r .audio)  \
+  > /tmp/file.wav && afplay /tmp/file.wav
+
+
+curl -s http://192.168.10.106:8888/api/media-file/7b65faf1-33b9-41ea-b2dc-9b2680670708 > /tmp/file.wav && afplay /tmp/file.wav
+
+# ファイルフォーマット確認
+afplay -d /tmp/file.wav
 ```
 
 ## 参考
